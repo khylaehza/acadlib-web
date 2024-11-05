@@ -1,22 +1,42 @@
 import React, { useState } from 'react';
 import { SideNav } from '../layout';
 import { CusTable, CusSearch, CusSort } from '../shared';
+import { useData } from '../DataContext';
 
 const StudentPage = () => {
 	const [curSearch, setCurSearch] = useState('');
 	const [sortOrder, setSortOrder] = useState('asc');
 
+	const { students } = useData();
+
 	const columns = [
-		{ key: 'image', label: 'LRN No', type: 'image' },
-		{ key: 'cn', label: 'Full Name' },
-		{ key: 'title', label: 'Grade' },
-		{ key: 'author', label: 'Section' },
-		{ key: 'qty', label: 'Guardian' },
-		{ key: 'edition', label: 'Contact Number' },
-		{ key: 'vol', label: 'No. Of Books Borrowed' },
-		{ key: 'date', label: 'Registered Date' },
+		{ key: 'lrn', label: 'LRN No' },
+		{ key: 'name', label: 'Full Name' },
+		{ key: 'grade', label: 'Grade' },
+		{ key: 'section', label: 'Section' },
+		{ key: 'guardian', label: 'Guardian' },
+		{ key: 'cnum', label: 'Contact Number' },
+		{ key: 'borrowedQuan', label: 'No. Of Books Borrowed' },
+		{ key: 'created_at', label: 'Registered Date', type: 'time' },
 	];
-	const rows = [];
+	const rows =
+		students?.length > 0
+			? students
+					.filter((data) => {
+						return curSearch.toLowerCase() === ''
+							? data
+							: data.name
+									.toLowerCase()
+									.includes(curSearch.toLowerCase());
+					})
+					.sort((a, b) => {
+						const dateA = new Date(a.created_at);
+						const dateB = new Date(b.created_at);
+						return sortOrder === 'asc'
+							? dateA - dateB
+							: dateB - dateA;
+					})
+			: [];
 
 	return (
 		<div className='flex font-montserrat'>
@@ -35,6 +55,7 @@ const StudentPage = () => {
 						columns={columns}
 						rows={rows}
 						tableName={'students'}
+						action={false}
 					/>
 				</div>
 			</div>

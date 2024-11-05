@@ -29,6 +29,8 @@ const AddBooks = () => {
 			place: '',
 			publisher: '',
 			borrowed: 0,
+			genre: '',
+			grade: '',
 			created_at: moment().format(),
 		},
 		validationSchema: Yup.object({
@@ -37,6 +39,8 @@ const AddBooks = () => {
 			qty: Yup.number().required('Quantity is required.'),
 			page: Yup.string().required('Page is required.'),
 			date: Yup.date().required('Copyright Date is required.'),
+			genre: Yup.string().required('Genre is required.'),
+			grade: Yup.string().required('Grade is required.'),
 			publisher: Yup.string().required('Publisher is required.'),
 		}),
 		onSubmit: (value, actions) => {

@@ -1,8 +1,17 @@
 import CusImgViewer from './CusImgViewer';
 import { useState } from 'react';
 import { useData } from '../DataContext';
+import moment from 'moment';
 
-const CusTable = ({ columns, rows, tableName, setCurRow, setEditBook }) => {
+const CusTable = ({
+	columns,
+	rows,
+	tableName,
+	setCurRow,
+	setEditBook,
+	action = true,
+	returnAct = false,
+}) => {
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
 	const { deleteItem } = useData();
@@ -16,6 +25,7 @@ const CusTable = ({ columns, rows, tableName, setCurRow, setEditBook }) => {
 		const itemId = row.key;
 		const imageUrl = row.image ? row.image : null;
 
+		console.log(row, tableName);
 		deleteItem(itemId, tableName, imageUrl);
 	};
 	return (
@@ -34,7 +44,9 @@ const CusTable = ({ columns, rows, tableName, setCurRow, setEditBook }) => {
 								{col.label}
 							</th>
 						))}
-						<th className=' p-2 text-left text-sm'>Actions</th>
+						{action && (
+							<th className=' p-2 text-left text-sm'>Actions</th>
+						)}
 					</tr>
 				</thead>
 				<tbody>
@@ -104,55 +116,73 @@ const CusTable = ({ columns, rows, tableName, setCurRow, setEditBook }) => {
 														/>
 													)} */}
 												</>
+											) : col.type === 'time' ? (
+												moment(row[col.key]).format(
+													'MM-DD-YYYY'
+												)
 											) : (
 												row[col.key]
 											)}
 										</td>
 									))}
-									<td className='text-xs p-2'>
-										<div className='flex flex-col gap-2 justify-center'>
-											<button
-												onClick={() => onEdit(row)}
-												className='bg-yellow-200 p-2 rounded-full hover:bg-yellow-300 flex flex-row gap-1 items-center'
-											>
-												<svg
-													xmlns='http://www.w3.org/2000/svg'
-													className='h-3 w-3'
-													fill='none'
-													viewBox='0 0 24 24'
-													stroke='currentColor'
-													strokeWidth='2'
+
+									{action && (
+										<td className='text-xs p-2'>
+											<div className='flex flex-col gap-2 justify-center'>
+												{!returnAct && (
+													<button
+														onClick={() =>
+															onEdit(row)
+														}
+														className='bg-yellow-200 p-2 rounded-full hover:bg-yellow-300 flex flex-row gap-1 items-center'
+													>
+														<svg
+															xmlns='http://www.w3.org/2000/svg'
+															className='h-3 w-3'
+															fill='none'
+															viewBox='0 0 24 24'
+															stroke='currentColor'
+															strokeWidth='2'
+														>
+															<path
+																strokeLinecap='round'
+																strokeLinejoin='round'
+																d='M15.232 5.232l3.536 3.536M16.732 2.732a2.828 2.828 0 114 4l-12 12-4.5 1.5 1.5-4.5 12-12z'
+															/>
+														</svg>
+														Edit
+													</button>
+												)}
+												<button
+													onClick={() =>
+														onDelete(row)
+													}
+													className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center'
 												>
-													<path
-														strokeLinecap='round'
-														strokeLinejoin='round'
-														d='M15.232 5.232l3.536 3.536M16.732 2.732a2.828 2.828 0 114 4l-12 12-4.5 1.5 1.5-4.5 12-12z'
-													/>
-												</svg>
-												Edit
-											</button>
-											<button
-												onClick={() => onDelete(row)}
-												className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center'
-											>
-												<svg
-													xmlns='http://www.w3.org/2000/svg'
-													className='h-3 w-3'
-													fill='none'
-													viewBox='0 0 24 24'
-													stroke='currentColor'
-													strokeWidth='2'
-												>
-													<path
-														strokeLinecap='round'
-														strokeLinejoin='round'
-														d='M6 18L18 6M6 6l12 12'
-													/>
-												</svg>
-												Del
-											</button>
-										</div>
-									</td>
+													{!returnAct && (
+														<>
+															<svg
+																xmlns='http://www.w3.org/2000/svg'
+																className='h-3 w-3'
+																fill='none'
+																viewBox='0 0 24 24'
+																stroke='currentColor'
+																strokeWidth='2'
+															>
+																<path
+																	strokeLinecap='round'
+																	strokeLinejoin='round'
+																	d='M6 18L18 6M6 6l12 12'
+																/>
+															</svg>
+															<>Del</>
+														</>
+													)}
+													{returnAct && 'Return Book'}
+												</button>
+											</div>
+										</td>
+									)}
 								</tr>
 							))}
 						</>

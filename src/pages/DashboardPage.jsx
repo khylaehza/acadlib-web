@@ -1,8 +1,9 @@
 import React from 'react';
 import { SideNav } from '../layout';
-
 import { CusTable } from '../shared';
+import { useData } from '../DataContext';
 const DashboardPage = () => {
+	const { students, borrowed } = useData();
 	const columns = [
 		{ key: 'image', label: 'Student', type: 'image' },
 		{ key: 'image', label: 'Title', type: 'image' },
@@ -25,7 +26,9 @@ const DashboardPage = () => {
 							<div className='bg-body p-8 rounded-xl shadow-xl'>
 								<div className='flex flex-col text-center '>
 									<p className='text-xl'>BORROWED</p>
-									<p className='text-3xl font-bold'>35</p>
+									<p className='text-3xl font-bold'>
+										{borrowed?.length}
+									</p>
 								</div>
 							</div>
 							<div className='bg-body p-8 rounded-xl shadow-xl'>
@@ -37,7 +40,9 @@ const DashboardPage = () => {
 							<div className='bg-body p-8 rounded-xl shadow-xl'>
 								<div className='flex flex-col text-center '>
 									<p className='text-xl'>STUDENTS</p>
-									<p className='text-3xl font-bold'>13</p>
+									<p className='text-3xl font-bold'>
+										{students?.length}
+									</p>
 								</div>
 							</div>
 						</div>

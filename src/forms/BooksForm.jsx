@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CusFormInput } from '../shared';
+import { CusFormInput, CusSelect } from '../shared';
 const BooksForm = ({ form, handleImage }) => {
 	return (
 		<div className='mt-6 flex flex-col gap-4'>
@@ -92,6 +92,37 @@ const BooksForm = ({ form, handleImage }) => {
 					error={form.errors.isbn}
 					touch={form.touched.isbn}
 					placeholder={'e.g. 1-85697-420-0'}
+				/>
+			</div>
+			<div className='text-black grid grid-cols-2 gap-3'>
+				<CusSelect
+					name='genre'
+					label={'Genre'}
+					value={form.values.genre}
+					onChange={form.handleChange}
+					onBlur={form.handleBlur}
+					error={form.errors.genre}
+					touch={form.touched.genre}
+					options={[
+						{ value: 'Fiction', label: 'Fiction' },
+						{ value: 'Non-Fiction', label: 'Non-Fiction' },
+					]}
+				/>
+				<CusSelect
+					name='grade'
+					label={'Grade'}
+					value={form.values.grade}
+					onChange={form.handleChange}
+					onBlur={form.handleBlur}
+					error={form.errors.grade}
+					touch={form.touched.grade}
+					options={[
+						{ value: 'For All', label: 'For All' },
+						{ value: 'Grade 7', label: 'Grade 7' },
+						{ value: 'Grade 8', label: 'Grade 8' },
+						{ value: 'Grade 9', label: 'Grade 9' },
+						{ value: 'Grade 10', label: 'Grade 10' },
+					]}
 				/>
 			</div>
 			<div className='text-black grid grid-cols-3 gap-3'>

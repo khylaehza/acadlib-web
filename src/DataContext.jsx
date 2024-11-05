@@ -20,9 +20,14 @@ export const DataProvider = ({ children }) => {
 	const [prompt, setPrompt] = useState({ stats: '', message: '' });
 	const [isVisible, setIsVisible] = useState(false);
 	const [books, setBooks] = useState([]);
+	const [students, setStudents] = useState([]);
+	const [toBorrow, setToBorrow] = useState([]);
+	const [borrowed, setBorrowed] = useState([]);
 
 	const addItem = (newItem, tableName, imageFile) => {
 		const randomName = `${tableName}_${Date.now()}`;
+
+		console.log(`Adding item with randomName: ${randomName}`, newItem);
 
 		if (imageFile) {
 			const metadata = {
@@ -54,17 +59,27 @@ export const DataProvider = ({ children }) => {
 				() => {
 					getDownloadURL(uploadTask.snapshot.ref).then(
 						(downloadURL) => {
-							saveItemToDatabase(newItem, tableName, downloadURL);
+							saveItemToDatabase(
+								newItem,
+								tableName,
+								randomName,
+								downloadURL
+							);
 						}
 					);
 				}
 			);
 		} else {
-			saveItemToDatabase(newItem, tableName);
+			saveItemToDatabase(newItem, tableName, randomName);
 		}
 	};
 
-	const saveItemToDatabase = (newItem, tableName, imageUrl = null) => {
+	const saveItemToDatabase = (
+		newItem,
+		tableName,
+		randomName,
+		imageUrl = null
+	) => {
 		const itemData = { ...newItem };
 		if (imageUrl) {
 			itemData.image = imageUrl;
@@ -267,6 +282,86 @@ export const DataProvider = ({ children }) => {
 		return () => unsubscribe();
 	}, []);
 
+	useEffect(() => {
+		const table = ref(db, 'students');
+		const unsubscribe = onValue(
+			table,
+			(snapshot) => {
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([key, value]) => {
+							return { key, ...value };
+						}
+					);
+					setStudents(data);
+				} else {
+					console.log('No data available');
+					setStudents([]);
+				}
+				setLoading(false);
+			},
+			(error) => {
+				console.error('Error fetching data:', error);
+				setLoading(false);
+			}
+		);
+
+		return () => unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		const table = ref(db, 'to-borrow');
+		const unsubscribe = onValue(
+			table,
+			(snapshot) => {
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([borrowKey, value]) => {
+							return { borrowKey, ...value };
+						}
+					);
+					setToBorrow(data);
+				} else {
+					console.log('No data available');
+					setToBorrow([]);
+				}
+				setLoading(false);
+			},
+			(error) => {
+				console.error('Error fetching data:', error);
+				setLoading(false);
+			}
+		);
+
+		return () => unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		const table = ref(db, 'borrowed');
+		const unsubscribe = onValue(
+			table,
+			(snapshot) => {
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([borrowedKey, value]) => {
+							return { borrowedKey, ...value };
+						}
+					);
+					setBorrowed(data);
+				} else {
+					console.log('No data available');
+					setBorrowed([]);
+				}
+				setLoading(false);
+			},
+			(error) => {
+				console.error('Error fetching data:', error);
+				setLoading(false);
+			}
+		);
+
+		return () => unsubscribe();
+	}, []);
 	return (
 		<DataContext.Provider
 			value={{
@@ -277,6 +372,9 @@ export const DataProvider = ({ children }) => {
 				setIsVisible,
 				books,
 				editItem,
+				students,
+				toBorrow,
+				borrowed,
 			}}
 		>
 			{loading ? <div>Loading...</div> : children}
