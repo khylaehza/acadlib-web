@@ -2,7 +2,6 @@ import React from 'react';
 
 const CusSort = ({ sortOrder, setSortOrder }) => {
 	const toggleSortOrder = () => {
-		console.log();
 		setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
 	};
 	return (

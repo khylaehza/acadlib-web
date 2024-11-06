@@ -25,7 +25,6 @@ const CusTable = ({
 		const itemId = row.key;
 		const imageUrl = row.image ? row.image : null;
 
-		console.log(row, tableName);
 		deleteItem(itemId, tableName, imageUrl);
 	};
 	return (

@@ -21,7 +21,6 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 	const form = useFormik({
 		initialValues,
 		onSubmit: (values) => {
-			console.log(...values);
 			const completeValues = {
 				...values,
 				borrowedItems: initialValues.borrowedItems,
