@@ -14,7 +14,7 @@ const CusTable = ({
 }) => {
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
-	const { deleteItem } = useData();
+	const { deleteItem, addItem } = useData();
 
 	const onEdit = (row) => {
 		setCurRow(row);
@@ -26,6 +26,14 @@ const CusTable = ({
 		const imageUrl = row.image ? row.image : null;
 
 		deleteItem(itemId, tableName, imageUrl);
+	};
+
+	const onReturn = (row) => {
+		const itemId = row.key;
+		const returnItem = { ...row, rdate: moment().format() };
+
+		addItem(returnItem, 'history');
+		deleteItem(itemId, tableName);
 	};
 	return (
 		<div
@@ -129,37 +137,35 @@ const CusTable = ({
 										<td className='text-xs p-2'>
 											<div className='flex flex-col gap-2 justify-center'>
 												{!returnAct && (
-													<button
-														onClick={() =>
-															onEdit(row)
-														}
-														className='bg-yellow-200 p-2 rounded-full hover:bg-yellow-300 flex flex-row gap-1 items-center'
-													>
-														<svg
-															xmlns='http://www.w3.org/2000/svg'
-															className='h-3 w-3'
-															fill='none'
-															viewBox='0 0 24 24'
-															stroke='currentColor'
-															strokeWidth='2'
+													<>
+														<button
+															onClick={() =>
+																onEdit(row)
+															}
+															className='bg-yellow-200 p-2 rounded-full hover:bg-yellow-300 flex flex-row gap-1 items-center'
 														>
-															<path
-																strokeLinecap='round'
-																strokeLinejoin='round'
-																d='M15.232 5.232l3.536 3.536M16.732 2.732a2.828 2.828 0 114 4l-12 12-4.5 1.5 1.5-4.5 12-12z'
-															/>
-														</svg>
-														Edit
-													</button>
-												)}
-												<button
-													onClick={() =>
-														onDelete(row)
-													}
-													className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center'
-												>
-													{!returnAct && (
-														<>
+															<svg
+																xmlns='http://www.w3.org/2000/svg'
+																className='h-3 w-3'
+																fill='none'
+																viewBox='0 0 24 24'
+																stroke='currentColor'
+																strokeWidth='2'
+															>
+																<path
+																	strokeLinecap='round'
+																	strokeLinejoin='round'
+																	d='M15.232 5.232l3.536 3.536M16.732 2.732a2.828 2.828 0 114 4l-12 12-4.5 1.5 1.5-4.5 12-12z'
+																/>
+															</svg>
+															Edit
+														</button>
+														<button
+															onClick={() =>
+																onDelete(row)
+															}
+															className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center'
+														>
 															<svg
 																xmlns='http://www.w3.org/2000/svg'
 																className='h-3 w-3'
@@ -175,10 +181,19 @@ const CusTable = ({
 																/>
 															</svg>
 															<>Del</>
-														</>
-													)}
-													{returnAct && 'Return Book'}
-												</button>
+														</button>
+													</>
+												)}
+												{returnAct && (
+													<button
+														onClick={() =>
+															onReturn(row)
+														}
+														className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center justify-center align-center'
+													>
+														Return Book
+													</button>
+												)}
 											</div>
 										</td>
 									)}

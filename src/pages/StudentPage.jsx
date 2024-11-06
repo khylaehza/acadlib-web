@@ -16,7 +16,7 @@ const StudentPage = () => {
 		{ key: 'section', label: 'Section' },
 		{ key: 'guardian', label: 'Guardian' },
 		{ key: 'cnum', label: 'Contact Number' },
-		{ key: 'borrowedQuan', label: 'No. Of Books Borrowed' },
+		{ key: 'borrowedQuan', label: 'No. Of Books Currently Borrowed' },
 		{ key: 'created_at', label: 'Registered Date', type: 'time' },
 	];
 	const rows =
@@ -64,8 +64,6 @@ const StudentPage = () => {
 };
 
 const Header = ({ setCurSearch, curSearch, sortOrder, setSortOrder }) => {
-	const [showScanBook, setScanBook] = useState(false);
-
 	return (
 		<div className='h-24 bg-header shadow-xl flex items-center justify-between gap-6 p-6 '>
 			<div className='flex gap-4 w-1/2'>

@@ -23,11 +23,10 @@ export const DataProvider = ({ children }) => {
 	const [students, setStudents] = useState([]);
 	const [toBorrow, setToBorrow] = useState([]);
 	const [borrowed, setBorrowed] = useState([]);
+	const [history, setHistory] = useState([]);
 
 	const addItem = (newItem, tableName, imageFile) => {
 		const randomName = `${tableName}_${Date.now()}`;
-
-		console.log(`Adding item with randomName: ${randomName}`, newItem);
 
 		if (imageFile) {
 			const metadata = {
@@ -362,6 +361,34 @@ export const DataProvider = ({ children }) => {
 
 		return () => unsubscribe();
 	}, []);
+
+	useEffect(() => {
+		const table = ref(db, 'history');
+		const unsubscribe = onValue(
+			table,
+			(snapshot) => {
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([historyKey, value]) => {
+							return { historyKey, ...value };
+						}
+					);
+					setHistory(data);
+				} else {
+					console.log('No data available');
+					setHistory([]);
+				}
+				setLoading(false);
+			},
+			(error) => {
+				console.error('Error fetching data:', error);
+				setLoading(false);
+			}
+		);
+
+		return () => unsubscribe();
+	}, []);
+
 	return (
 		<DataContext.Provider
 			value={{
@@ -375,6 +402,7 @@ export const DataProvider = ({ children }) => {
 				students,
 				toBorrow,
 				borrowed,
+				history,
 			}}
 		>
 			{loading ? <div>Loading...</div> : children}

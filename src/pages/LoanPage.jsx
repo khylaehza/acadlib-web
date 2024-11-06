@@ -19,8 +19,8 @@ const LoanPage = () => {
 		{ key: 'name', label: 'Student' },
 		{ key: 'title', label: 'Title' },
 		{ key: 'author', label: 'Author' },
-		{ key: 'borrowedDate', label: 'Borrowed Date' },
-		{ key: 'returnDate', label: 'Return Date' },
+		{ key: 'sdate', label: 'Borrowed Date', type: 'time' },
+		{ key: 'edate', label: 'Return Date', type: 'time' },
 	];
 	const rows = borrowed
 		.map((item) => {
@@ -31,10 +31,11 @@ const LoanPage = () => {
 			return {
 				key: item.borrowedKey,
 				name: student ? student.name : 'Unknown',
+				lrn: student ? student.lrn : 'Unknown',
 				title: book ? book.title : 'Unknown',
 				author: book ? book.author : 'Unknown',
-				borrowedDate: item.sdate,
-				returnDate: item.edate,
+				sdate: item.sdate,
+				edate: item.edate,
 			};
 		})
 		.filter((data) => {

@@ -26,7 +26,7 @@ const BooksPage = () => {
 		{ key: 'edition', label: 'Edition' },
 		{ key: 'vol', label: 'Volume' },
 		{ key: 'page', label: 'Pages' },
-		{ key: 'date', label: 'Date' },
+		{ key: 'date', label: 'Date', type: 'time' },
 		{ key: 'isbn', label: 'ISBN' },
 		{ key: 'place', label: 'Place' },
 		{ key: 'publisher', label: 'Publisher' },

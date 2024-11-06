@@ -5,7 +5,7 @@ import { useData } from '../../DataContext';
 import moment from 'moment';
 import { BorrowedForm } from '../../forms';
 const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
-	const { addItem, toBorrow, deleteItem } = useData();
+	const { addItem, toBorrow, deleteItem, students, editItem } = useData();
 
 	const studentBorrowed = toBorrow.filter((stud) => stud.lrn == qrData);
 
@@ -46,7 +46,15 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 			...borrowedItemData,
 		};
 
+		const studentKey = students.find((s) => s.lrn == formData.lrn)?.key;
+		const studentQuan = students.find(
+			(s) => s.lrn == formData.lrn
+		)?.borrowedQuan;
+		const updatedQuantity = studentQuan + 1;
+		let updatedItem = { borrowedQuan: updatedQuantity };
+
 		addItem(formData, 'borrowed');
+		editItem(studentKey, updatedItem, 'students');
 		deleteItem(formData.toBorrowKey, 'to-borrow');
 	};
 

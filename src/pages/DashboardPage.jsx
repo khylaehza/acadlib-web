@@ -2,18 +2,52 @@ import React from 'react';
 import { SideNav } from '../layout';
 import { CusTable } from '../shared';
 import { useData } from '../DataContext';
+import moment from 'moment';
 const DashboardPage = () => {
-	const { students, borrowed } = useData();
+	const { students, borrowed, books, history } = useData();
+
 	const columns = [
-		{ key: 'image', label: 'Student', type: 'image' },
-		{ key: 'image', label: 'Title', type: 'image' },
-		{ key: 'cn', label: 'Author' },
-		{ key: 'title', label: 'Borrowed Date' },
-		{ key: 'author', label: 'Return Date' },
-		{ key: 'qty', label: 'Days Due' },
+		{ key: 'name', label: 'Student' },
+		{ key: 'title', label: 'Title' },
+		{ key: 'author', label: 'Author' },
+		{ key: 'sdate', label: 'Borrowed Date', type: 'time' },
+		{ key: 'edate', label: 'End Date', type: 'time' },
+	];
+	const columnsH = [
+		{ key: 'name', label: 'Student' },
+		{ key: 'title', label: 'Title' },
+		{ key: 'author', label: 'Author' },
+		{ key: 'sdate', label: 'Borrowed Date', type: 'time' },
+		{ key: 'edate', label: 'End Date', type: 'time' },
+		{ key: 'rdate', label: 'Return Date', type: 'time' },
 	];
 
-	const rows = [];
+	const overdueBooks = borrowed
+		.map((item) => {
+			const student = students?.find(
+				(student) => student.lrn === item.lrn
+			);
+			const book = books.find((book) => book.cn === item.cn);
+			return {
+				key: item.borrowedKey,
+				name: student ? student.name : 'Unknown',
+				lrn: student ? student.lrn : 'Unknown',
+				title: book ? book.title : 'Unknown',
+				author: book ? book.author : 'Unknown',
+				sdate: item.sdate,
+				edate: item.edate,
+			};
+		})
+		.filter((b) => {
+			const endDate = moment(b.edate);
+			return endDate.isBefore(moment());
+		});
+
+	const historyBooks = history.filter((h) => {
+		const returnDate = moment(h.rdate);
+		return returnDate.isSame(moment(), 'day');
+	});
+
 	return (
 		<div className='flex font-montserrat'>
 			<SideNav />
@@ -34,7 +68,9 @@ const DashboardPage = () => {
 							<div className='bg-body p-8 rounded-xl shadow-xl'>
 								<div className='flex flex-col text-center '>
 									<p className='text-xl'>OVERDUE</p>
-									<p className='text-3xl font-bold'>6</p>
+									<p className='text-3xl font-bold'>
+										{overdueBooks.length}
+									</p>
 								</div>
 							</div>
 							<div className='bg-body p-8 rounded-xl shadow-xl'>
@@ -51,15 +87,15 @@ const DashboardPage = () => {
 					<div>Overdue Book Loans</div>
 					<CusTable
 						columns={columns}
-						rows={rows}
-						tableName={'overdue'}
+						rows={overdueBooks}
+						action={false}
 					/>
 
 					<div>Today's Return Book</div>
 					<CusTable
-						columns={columns}
-						rows={rows}
-						tableName={'overdue'}
+						columns={columnsH}
+						rows={historyBooks}
+						action={false}
 					/>
 				</div>
 			</div>

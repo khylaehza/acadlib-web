@@ -104,7 +104,7 @@ const BooksForm = ({ form, handleImage }) => {
 					error={form.errors.genre}
 					touch={form.touched.genre}
 					options={[
-						{ value: 'Fiction', label: 'Fiction' },
+						{ value: 'Academic', label: 'Academic' },
 						{ value: 'Non-Fiction', label: 'Non-Fiction' },
 					]}
 				/>
