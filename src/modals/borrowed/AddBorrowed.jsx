@@ -4,8 +4,10 @@ import { useFormik } from 'formik';
 import { useData } from '../../DataContext';
 import moment from 'moment';
 import { BorrowedForm } from '../../forms';
+import * as Yup from 'yup';
 const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
-	const { addItem, toBorrow, deleteItem, students, editItem } = useData();
+	const { addItem, toBorrow, deleteItem, students, editItem, books } =
+		useData();
 
 	const studentBorrowed = toBorrow.filter((stud) => stud.lrn == qrData);
 
@@ -15,11 +17,35 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 			toBorrowKey: item.borrowKey || 'samp',
 			cn: item.cn || 'samp',
 			created_at: moment().format(),
+			sdate: '',
+			edate: '',
 		})),
 	};
+	const validationSchema = Yup.object().shape({
+		borrowedItems: Yup.array().of(
+			Yup.object().shape({
+				sdate: Yup.date().required('Start Date is required'),
+				edate: Yup.date()
+					.required('End Date is required')
+					.test(
+						'is-after-sdate',
+						'End Date must be after Start Date',
+						function (value) {
+							const { sdate } = this.parent;
+							return (
+								value &&
+								sdate &&
+								moment(value).isAfter(moment(sdate))
+							);
+						}
+					),
+			})
+		),
+	});
 
 	const form = useFormik({
 		initialValues,
+		validationSchema,
 		onSubmit: (values) => {
 			const completeValues = {
 				...values,
@@ -46,6 +72,12 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 			...borrowedItemData,
 		};
 
+		const booksKey = books.find((b) => b.cn == formData.cn)?.key;
+		const bookQuan = books.find((s) => s.cn == formData.cn)?.qty;
+
+		const updatedBook = bookQuan - 1;
+		let updatedBQty = { qty: updatedBook };
+
 		const studentKey = students.find((s) => s.lrn == formData.lrn)?.key;
 		const studentQuan = students.find(
 			(s) => s.lrn == formData.lrn
@@ -54,8 +86,9 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 		let updatedItem = { borrowedQuan: updatedQuantity };
 
 		addItem(formData, 'borrowed');
-		editItem(studentKey, updatedItem, 'students');
 		deleteItem(formData.toBorrowKey, 'to-borrow');
+		editItem(studentKey, updatedItem, 'students');
+		editItem(booksKey, updatedBQty, 'books');
 	};
 
 	return (

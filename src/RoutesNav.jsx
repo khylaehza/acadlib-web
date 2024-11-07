@@ -4,6 +4,7 @@ import {
 	DashboardPage,
 	StudentPage,
 	LoanPage,
+	HistoryPage,
 } from './pages';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -30,6 +31,10 @@ const RoutesNav = () => {
 				<Route
 					path='/loan'
 					element={<LoanPage />}
+				></Route>
+				<Route
+					path='/history'
+					element={<HistoryPage />}
 				></Route>
 			</Routes>
 		</Router>

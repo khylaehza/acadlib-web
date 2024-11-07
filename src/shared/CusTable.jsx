@@ -2,6 +2,7 @@ import CusImgViewer from './CusImgViewer';
 import { useState } from 'react';
 import { useData } from '../DataContext';
 import moment from 'moment';
+import CusAlert from './CusAlert';
 
 const CusTable = ({
 	columns,
@@ -14,7 +15,11 @@ const CusTable = ({
 }) => {
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
-	const { deleteItem, addItem } = useData();
+	const [deleteOpen, setOpenDelete] = useState(false);
+	const { deleteItem, addItem, books, editItem } = useData();
+	const [itemId, setItemId] = useState(null);
+	const [tblName, setTableName] = useState(null);
+	const [imageUrl, setImageUrl] = useState(null);
 
 	const onEdit = (row) => {
 		setCurRow(row);
@@ -22,18 +27,34 @@ const CusTable = ({
 	};
 
 	const onDelete = (row) => {
-		const itemId = row.key;
-		const imageUrl = row.image ? row.image : null;
+		const { key: itemId, image } = row;
+		const imageUrl = image || null;
 
-		deleteItem(itemId, tableName, imageUrl);
+		setItemId(itemId);
+		setTableName(tableName);
+		setImageUrl(imageUrl);
+
+		setOpenDelete(true);
+	};
+
+	const handleDelete = () => {
+		deleteItem(itemId, tblName, imageUrl);
+		setOpenDelete(false);
 	};
 
 	const onReturn = (row) => {
 		const itemId = row.key;
 		const returnItem = { ...row, rdate: moment().format() };
 
+		const booksKey = books.find((b) => b.title == row.title)?.key;
+		const bookQuan = books.find((s) => s.title == row.title)?.qty;
+
+		const updatedBook = bookQuan + 1;
+		let updatedBQty = { qty: updatedBook };
+
 		addItem(returnItem, 'history');
 		deleteItem(itemId, tableName);
+		editItem(booksKey, updatedBQty, 'books');
 	};
 	return (
 		<div
@@ -94,34 +115,6 @@ const CusTable = ({
 															);
 														}}
 													/>
-													{/* {col.key == 'key' ? (
-														<img
-															size={256}
-															style={{
-																height: 'auto',
-																maxWidth:
-																	'100%',
-																width: '100%',
-															}}
-															value={'value'}
-															viewBox={`0 0 256 256`}
-															onClick={() => {
-																setOpenImg(
-																	true
-																);
-																setImg(
-																	row[col.key]
-																);
-															}}
-															className='cursor-pointer'
-														/>
-													) : (
-														<img
-															src={row[col.key]}
-															alt={`${col.label}`}
-															className='w-15 h-15 object-cover'
-														/>
-													)} */}
 												</>
 											) : col.type === 'time' ? (
 												moment(row[col.key]).format(
@@ -208,6 +201,13 @@ const CusTable = ({
 				alt={img}
 				openImage={openImg}
 				setOpenImage={setOpenImg}
+			/>
+			<CusAlert
+				open={deleteOpen}
+				setOpen={setOpenDelete}
+				title='Confirm Deletion'
+				content='Are you sure you want to delete this item?'
+				onConfirm={handleDelete}
 			/>
 		</div>
 	);

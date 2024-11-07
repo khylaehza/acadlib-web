@@ -16,7 +16,7 @@ const LoanPage = () => {
 	const [sortOrder, setSortOrder] = useState('asc');
 
 	const columns = [
-		{ key: 'name', label: 'Student' },
+		{ key: 'name', label: 'Borrower' },
 		{ key: 'title', label: 'Title' },
 		{ key: 'author', label: 'Author' },
 		{ key: 'sdate', label: 'Borrowed Date', type: 'time' },

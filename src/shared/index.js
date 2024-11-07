@@ -8,3 +8,4 @@ export { default as CusNotif } from './CusNotif';
 export { default as CusImgViewer } from './CusImgViewer';
 export { default as CusQRScanner } from './CusQRScanner';
 export { default as CusSelect } from './CusSelect';
+export { default as CusAlert } from './CusAlert';

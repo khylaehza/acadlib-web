@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { SideNav } from '../layout';
 import { CusTable, CusSearch, CusSort } from '../shared';
 import { useData } from '../DataContext';
+import { EditStudents } from '../modals';
 
 const StudentPage = () => {
 	const [curSearch, setCurSearch] = useState('');
 	const [sortOrder, setSortOrder] = useState('asc');
+	const [curRow, setCurRow] = useState();
+	const [showEditStud, setEditStud] = useState(false);
 
 	const { students } = useData();
 
@@ -16,7 +19,7 @@ const StudentPage = () => {
 		{ key: 'section', label: 'Section' },
 		{ key: 'guardian', label: 'Guardian' },
 		{ key: 'cnum', label: 'Contact Number' },
-		{ key: 'borrowedQuan', label: 'No. Of Books Currently Borrowed' },
+		{ key: 'borrowedQuan', label: 'Total Num of Borrowed Books' },
 		{ key: 'created_at', label: 'Registered Date', type: 'time' },
 	];
 	const rows =
@@ -55,10 +58,18 @@ const StudentPage = () => {
 						columns={columns}
 						rows={rows}
 						tableName={'students'}
-						action={false}
+						setCurRow={setCurRow}
+						setEditBook={setEditStud}
 					/>
 				</div>
 			</div>
+			{curRow && (
+				<EditStudents
+					curRow={curRow}
+					setEditBook={setEditStud}
+					showEditBook={showEditStud}
+				/>
+			)}
 		</div>
 	);
 };

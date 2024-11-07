@@ -3,18 +3,20 @@ import { SideNav } from '../layout';
 import { CusTable } from '../shared';
 import { useData } from '../DataContext';
 import moment from 'moment';
+import { useState } from 'react';
 const DashboardPage = () => {
 	const { students, borrowed, books, history } = useData();
+	const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
 	const columns = [
-		{ key: 'name', label: 'Student' },
+		{ key: 'name', label: 'Borrower' },
 		{ key: 'title', label: 'Title' },
 		{ key: 'author', label: 'Author' },
 		{ key: 'sdate', label: 'Borrowed Date', type: 'time' },
 		{ key: 'edate', label: 'End Date', type: 'time' },
 	];
 	const columnsH = [
-		{ key: 'name', label: 'Student' },
+		{ key: 'name', label: 'Borrower' },
 		{ key: 'title', label: 'Title' },
 		{ key: 'author', label: 'Author' },
 		{ key: 'sdate', label: 'Borrowed Date', type: 'time' },
@@ -84,19 +86,27 @@ const DashboardPage = () => {
 						</div>
 					</div>
 
-					<div>Overdue Book Loans</div>
-					<CusTable
-						columns={columns}
-						rows={overdueBooks}
-						action={false}
-					/>
+					<div className='text-lg font-bold'>OVERDUE BOOK LOANS</div>
+					<div className='flex flex-col gap-10'>
+						<CusTable
+							columns={columns}
+							rows={overdueBooks}
+							action={false}
+						/>
 
-					<div>Today's Return Book</div>
-					<CusTable
-						columns={columnsH}
-						rows={historyBooks}
-						action={false}
-					/>
+						<hr />
+						<div>
+							<div className='text-lg font-bold'>
+								TODAY's RETURN BOOKS
+							</div>
+
+							<CusTable
+								columns={columnsH}
+								rows={historyBooks}
+								action={false}
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
