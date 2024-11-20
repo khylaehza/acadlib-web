@@ -93,8 +93,8 @@ const DashboardPage = () => {
 							rows={overdueBooks}
 							columns={columns}
 							module={'Overdue Book Loans'}
-							s={4}
-							h={1}
+							s={6}
+							h={8}
 						/>
 					</div>
 
@@ -115,8 +115,8 @@ const DashboardPage = () => {
 									rows={historyBooks}
 									columns={columnsH}
 									module={"Today's Return Books"}
-									s={4}
-									h={1}
+									s={6}
+									h={8}
 								/>
 							</div>
 
