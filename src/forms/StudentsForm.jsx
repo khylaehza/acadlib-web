@@ -34,7 +34,7 @@ const StudentsForm = ({ form, handleImage }) => {
 				/>
 			</div>
 
-			<div className='text-black grid grid-cols-1 gap-3'>
+			<div className='text-black grid grid-cols-2 gap-3'>
 				<CusFormInput
 					name='lrn'
 					label={'LRN'}
@@ -43,6 +43,15 @@ const StudentsForm = ({ form, handleImage }) => {
 					onBlur={form.handleBlur}
 					error={form.errors.lrn}
 					touch={form.touched.lrn}
+				/>
+				<CusFormInput
+					name='cnum'
+					label={'Contact Number'}
+					value={form.values.cnum}
+					onChange={form.handleChange}
+					onBlur={form.handleBlur}
+					error={form.errors.cnum}
+					touch={form.touched.cnum}
 				/>
 			</div>
 			<div className='text-black grid grid-cols-2 gap-3'>
@@ -70,6 +79,42 @@ const StudentsForm = ({ form, handleImage }) => {
 						{ value: '9', label: 'Grade 9' },
 						{ value: '10', label: 'Grade 10' },
 					]}
+				/>
+			</div>
+			<div className='text-black grid grid-cols-2 gap-3'>
+				<CusFormInput
+					name='npass'
+					label={'Edit Password'}
+					value={form.values.npass}
+					onChange={form.handleChange}
+					onBlur={form.handleBlur}
+					error={form.errors.npass}
+					touch={form.touched.npass}
+					placeholder={'•••••••••'}
+					type='password'
+				/>
+				<CusFormInput
+					name='conpass'
+					label={'Confirm Edit Password'}
+					value={form.values.conpass}
+					onChange={form.handleChange}
+					onBlur={form.handleBlur}
+					error={form.errors.conpass}
+					touch={form.touched.conpass}
+					placeholder={'•••••••••'}
+					type='password'
+				/>
+			</div>
+			<div className='text-black grid grid-cols-1 gap-3'>
+				<CusFormInput
+					name='image'
+					label={'Image'}
+					value={form.values.image}
+					onChange={handleImage}
+					onBlur={form.handleBlur}
+					error={form.errors.image}
+					touch={form.touched.image}
+					type='file'
 				/>
 			</div>
 		</div>

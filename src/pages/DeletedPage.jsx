@@ -2,39 +2,38 @@ import React, { useState } from 'react';
 import { SideNav } from '../layout';
 import { CusTable, CusSearch, CusSort, CusPrint } from '../shared';
 import { useData } from '../DataContext';
+import { EditStudents } from '../modals';
 
-const HistoryPage = () => {
+const DeletedPage = () => {
 	const [curSearch, setCurSearch] = useState('');
 	const [sortOrder, setSortOrder] = useState('asc');
 	const [curRow, setCurRow] = useState();
+	const [showEditStud, setEditStud] = useState(false);
 
-	const { history } = useData();
+	const { deleted } = useData();
 
 	const columns = [
-		{ key: 'name', label: 'Borrower' },
-		{ key: 'title', label: 'Title' },
-		{ key: 'author', label: 'Author' },
-		{ key: 'sdate', label: 'Start Date' },
-		{ key: 'edate', label: 'End Date' },
-		{ key: 'rdate', label: 'Return Date', type: 'time' },
+		{ key: 'lrn', label: 'LRN No' },
+		{ key: 'name', label: 'Full Name' },
+		{ key: 'grade', label: 'Grade' },
+		{ key: 'section', label: 'Section' },
+		{ key: 'guardian', label: 'Guardian' },
+		{ key: 'cnum', label: 'Contact Number' },
 	];
 
 	const rows =
-		history?.length > 0
-			? history
+		deleted?.length > 0
+			? deleted
 					.filter((data) => {
 						return curSearch.toLowerCase() === ''
 							? data
-							: data.title
+							: data.name
 									.toLowerCase()
-									.includes(curSearch.toLowerCase()) ||
-									data.author
-										.toLowerCase()
-										.includes(curSearch.toLowerCase());
+									.includes(curSearch.toLowerCase());
 					})
 					.sort((a, b) => {
-						const dateA = new Date(a.rdate);
-						const dateB = new Date(b.rdate);
+						const dateA = new Date(a.created_at);
+						const dateB = new Date(b.created_at);
 						return sortOrder === 'asc'
 							? dateA - dateB
 							: dateB - dateA;
@@ -51,15 +50,19 @@ const HistoryPage = () => {
 					curSearch={curSearch}
 					sortOrder={sortOrder}
 					setSortOrder={setSortOrder}
-					rows={rows}
 					columns={columns}
+					rows={rows}
 				/>
 				<hr className='border-body' />
+
 				<div className='flex-1 p-6'>
+					<p className='text-xl font-bold'>DELETED STUDENTS</p>
 					<CusTable
 						columns={columns}
 						rows={rows}
-						tableName={'history'}
+						tableName={'deleted'}
+						setCurRow={setCurRow}
+						setEditBook={setEditStud}
 						action={false}
 					/>
 				</div>
@@ -77,28 +80,25 @@ const Header = ({
 	columns,
 }) => {
 	return (
-		<div className='h-24 bg-header shadow-xl flex items-center justify-between gap-6 p-6 w-full'>
+		<div className='h-24 bg-header shadow-xl flex items-center justify-between gap-6 p-6 '>
 			<div className='flex gap-4 w-1/2'>
 				<CusSearch
 					setCurSearch={setCurSearch}
 					curSearch={curSearch}
-					label={'name, author'}
+					label={'name'}
 				/>
 				<CusSort
 					sortOrder={sortOrder}
 					setSortOrder={setSortOrder}
 				/>
 			</div>
-
-			<div className='flex gap-4 w-1/2 ml-auto justify-end'>
-				<CusPrint
-					rows={rows}
-					columns={columns}
-					module={'History'}
-				/>
-			</div>
+			{/* <CusPrint
+				rows={rows}
+				columns={columns}
+				module={'Students'}
+			/> */}
 		</div>
 	);
 };
 
-export default HistoryPage;
+export default DeletedPage;

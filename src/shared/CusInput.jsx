@@ -11,6 +11,7 @@ export const CusFormInput = ({
 	placeholder,
 	type = 'text',
 	color = 'black',
+	disabled,
 }) => {
 	return (
 		<div className='w-full flex flex-col gap-1'>
@@ -30,6 +31,7 @@ export const CusFormInput = ({
 				value={value}
 				placeholder={placeholder}
 				type={type}
+				disabled={disabled}
 			/>
 			{touch && error ? (
 				<div className='text-red-500 text-xs text-left'>{error}</div>

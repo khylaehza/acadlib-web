@@ -9,10 +9,14 @@ const CusModal = ({
 	form,
 	setImageFile,
 	showActions = true,
+	error,
 }) => {
 	const onCancel = () => {
 		setOpen(false);
 		setImageFile(null);
+		form.resetForm();
+
+		console.log('cllodsd');
 	};
 
 	return (
@@ -52,6 +56,7 @@ const CusModal = ({
 									<div className='mt-2'>
 										<div className='text-sm text-gray-500'>
 											{content}
+											{error}
 										</div>
 									</div>
 								</div>

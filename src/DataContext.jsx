@@ -24,6 +24,9 @@ export const DataProvider = ({ children }) => {
 	const [toBorrow, setToBorrow] = useState([]);
 	const [borrowed, setBorrowed] = useState([]);
 	const [history, setHistory] = useState([]);
+	const [librarian, setLibrarian] = useState([]);
+	const [deleted, setDeleted] = useState([]);
+	const [deletedBooks, setDeletedBooks] = useState([]);
 
 	const addItem = (newItem, tableName, imageFile) => {
 		const randomName = `${tableName}_${Date.now()}`;
@@ -389,6 +392,87 @@ export const DataProvider = ({ children }) => {
 		return () => unsubscribe();
 	}, []);
 
+	useEffect(() => {
+		const table = ref(db, 'librarian');
+		const unsubscribe = onValue(
+			table,
+			(snapshot) => {
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([librarianKey, value]) => {
+							return { librarianKey, ...value };
+						}
+					);
+					setLibrarian(data);
+				} else {
+					console.log('No data available');
+					setLibrarian([]);
+				}
+				setLoading(false);
+			},
+			(error) => {
+				console.error('Error fetching data:', error);
+				setLoading(false);
+			}
+		);
+
+		return () => unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		const table = ref(db, 'deleted');
+		const unsubscribe = onValue(
+			table,
+			(snapshot) => {
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([deletedKey, value]) => {
+							return { deletedKey, ...value };
+						}
+					);
+					setDeleted(data);
+				} else {
+					console.log('No data available');
+					setDeleted([]);
+				}
+				setLoading(false);
+			},
+			(error) => {
+				console.error('Error fetching data:', error);
+				setLoading(false);
+			}
+		);
+
+		return () => unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		const table = ref(db, 'deletedBooks');
+		const unsubscribe = onValue(
+			table,
+			(snapshot) => {
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([deletedKey, value]) => {
+							return { deletedKey, ...value };
+						}
+					);
+					setDeletedBooks(data);
+				} else {
+					console.log('No data available');
+					setDeletedBooks([]);
+				}
+				setLoading(false);
+			},
+			(error) => {
+				console.error('Error fetching data:', error);
+				setLoading(false);
+			}
+		);
+
+		return () => unsubscribe();
+	}, []);
+
 	return (
 		<DataContext.Provider
 			value={{
@@ -403,6 +487,9 @@ export const DataProvider = ({ children }) => {
 				toBorrow,
 				borrowed,
 				history,
+				librarian,
+				deleted,
+				deletedBooks,
 			}}
 		>
 			{loading ? <div>Loading...</div> : children}

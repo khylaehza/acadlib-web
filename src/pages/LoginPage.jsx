@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { CusFormInput, CusPrimButton } from '../shared';
+import { CusFormInput, CusNotif } from '../shared';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { AddLibrarian, EditLibrarian } from '../modals';
+import { useData } from '../DataContext';
 const LoginPage = () => {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
+	const { librarian } = useData();
 	const form = useFormik({
 		initialValues: {
 			email: '',
@@ -16,10 +19,11 @@ const LoginPage = () => {
 			pass: Yup.string().required('Password is required.'),
 		}),
 		onSubmit: (value, actions) => {
-			if (
-				value.email === 'librarian@acadlib.com' &&
-				value.pass === 'admin'
-			) {
+			const matchedLibrarian = librarian.find(
+				(lib) => lib.email === value.email && lib.pass === value.pass
+			);
+
+			if (matchedLibrarian) {
 				setError('');
 				navigate('/dashboard');
 			} else {
@@ -44,7 +48,12 @@ const LoginPage = () => {
 							className='items-center'
 						/>
 					</div>
-					<div className='bg-black/[.6] w-full rounded-lg h-80 p-8 '>
+					<div className='w-full justify-between flex flex-row items-center'>
+						<div></div>
+						<AddLibrarian />
+					</div>
+
+					<div className='bg-black/[.6] w-full rounded-lg h-full p-8 -mt-8'>
 						<form
 							onSubmit={form.handleSubmit}
 							className='flex flex-col gap-4 justify-center items-center'
@@ -78,17 +87,25 @@ const LoginPage = () => {
 									{error}
 								</div>
 							)}
-
 							<button
 								className='mt-2 w-full bg-primary text-black border-none outline-none'
 								type='submit'
 							>
 								LOGIN
 							</button>
+
+							{/* <button
+								className='-mt-2 w-full bg-transparent text-white border-none outline-none'
+								type='button'
+							>
+								Forgot Password?
+							</button> */}
 						</form>
+						<EditLibrarian />
 					</div>
 				</div>
 			</div>
+			<CusNotif />
 		</div>
 	);
 };

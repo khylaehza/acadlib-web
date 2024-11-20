@@ -1,12 +1,11 @@
 import React from 'react';
 import { SideNav } from '../layout';
-import { CusTable } from '../shared';
+import { CusTable, CusPrint } from '../shared';
 import { useData } from '../DataContext';
 import moment from 'moment';
-import { useState } from 'react';
+
 const DashboardPage = () => {
 	const { students, borrowed, books, history } = useData();
-	const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
 	const columns = [
 		{ key: 'name', label: 'Borrower' },
@@ -86,7 +85,19 @@ const DashboardPage = () => {
 						</div>
 					</div>
 
-					<div className='text-lg font-bold'>OVERDUE BOOK LOANS</div>
+					<div className='flex flex-row align-center items-center gap-4'>
+						<div className='text-lg font-bold'>
+							OVERDUE BOOK LOANS
+						</div>
+						<CusPrint
+							rows={overdueBooks}
+							columns={columns}
+							module={'Overdue Book Loans'}
+							s={4}
+							h={1}
+						/>
+					</div>
+
 					<div className='flex flex-col gap-10'>
 						<CusTable
 							columns={columns}
@@ -96,8 +107,17 @@ const DashboardPage = () => {
 
 						<hr />
 						<div>
-							<div className='text-lg font-bold'>
-								TODAY's RETURN BOOKS
+							<div className='flex flex-row align-center items-center gap-4'>
+								<div className='text-lg font-bold'>
+									TODAY'S RETURN BOOKS
+								</div>
+								<CusPrint
+									rows={historyBooks}
+									columns={columnsH}
+									module={"Today's Return Books"}
+									s={4}
+									h={1}
+								/>
 							</div>
 
 							<CusTable

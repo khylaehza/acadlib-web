@@ -5,6 +5,8 @@ import {
 	StudentPage,
 	LoanPage,
 	HistoryPage,
+	DeletedPage,
+	DeletedBooksPage,
 } from './pages';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -35,6 +37,14 @@ const RoutesNav = () => {
 				<Route
 					path='/history'
 					element={<HistoryPage />}
+				></Route>
+				<Route
+					path='/deleted'
+					element={<DeletedPage />}
+				></Route>
+				<Route
+					path='/deletedBooks'
+					element={<DeletedBooksPage />}
 				></Route>
 			</Routes>
 		</Router>

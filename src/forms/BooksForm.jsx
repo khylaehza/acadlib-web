@@ -75,7 +75,7 @@ const BooksForm = ({ form, handleImage }) => {
 			<div className='text-black grid grid-cols-2 gap-3'>
 				<CusFormInput
 					name='vol'
-					label={'Volume'}
+					label={'Subject'}
 					value={form.values.vol}
 					onChange={form.handleChange}
 					onBlur={form.handleBlur}
@@ -106,6 +106,8 @@ const BooksForm = ({ form, handleImage }) => {
 					options={[
 						{ value: 'Academic', label: 'Academic' },
 						{ value: 'Non-Fiction', label: 'Non-Fiction' },
+						{ value: 'Text Books', label: 'Text Books' },
+						{ value: 'Manual', label: 'Manual' },
 					]}
 				/>
 				<CusSelect

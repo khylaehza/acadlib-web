@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { CusModal } from '../../shared';
+import { CusModal, CusAlert } from '../../shared';
 import { useFormik } from 'formik';
 import { useData } from '../../DataContext';
 import moment from 'moment';
 import { BorrowedForm } from '../../forms';
 import * as Yup from 'yup';
+
 const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 	const { addItem, toBorrow, deleteItem, students, editItem, books } =
 		useData();
+	const [openAlert, setOpenAlert] = useState(false);
+	const [curIndex, setIndex] = useState();
+
+	const handleAlert = () => {
+		handleItemSubmit(curIndex);
+		setOpenAlert(false);
+	};
 
 	const studentBorrowed = toBorrow.filter((stud) => stud.lrn == qrData);
 
@@ -21,6 +29,7 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 			edate: '',
 		})),
 	};
+
 	const validationSchema = Yup.object().shape({
 		borrowedItems: Yup.array().of(
 			Yup.object().shape({
@@ -91,6 +100,15 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 		editItem(booksKey, updatedBQty, 'books');
 	};
 
+	const handleOpenAlert = (index) => {
+		if (form.values.borrowedItems.length > 0) {
+			setIndex(index);
+			setOpenAlert(true);
+		} else {
+			console.warn('No data available to approve.');
+		}
+	};
+
 	return (
 		<div>
 			<CusModal
@@ -100,6 +118,8 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 						form={form}
 						borrowed={studentBorrowed}
 						handleItemSubmit={handleItemSubmit}
+						setIndex={setIndex}
+						setOpenAlert={handleOpenAlert}
 					/>
 				}
 				title={'Approved To Borrow Book'}
@@ -108,6 +128,15 @@ const AddBorrowed = ({ openBorrowed, setOpenBorrowed, qrData }) => {
 				form={form}
 				showActions={false}
 				setImageFile={() => {}}
+			/>
+			<CusAlert
+				open={openAlert}
+				setOpen={setOpenAlert}
+				title='Confirm Borrow'
+				content='Are you sure you want to approve this item?'
+				onConfirm={handleAlert}
+				approve={true}
+				text={'Approve'}
 			/>
 		</div>
 	);

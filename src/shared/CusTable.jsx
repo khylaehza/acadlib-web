@@ -16,6 +16,9 @@ const CusTable = ({
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
 	const [deleteOpen, setOpenDelete] = useState(false);
+	const [returnOpen, setOpenReturn] = useState(false);
+	const [returnItems, setReturnItems] = useState(false);
+	const [deleteItems, setDeleteItems] = useState(false);
 	const { deleteItem, addItem, books, editItem } = useData();
 	const [itemId, setItemId] = useState(null);
 	const [tblName, setTableName] = useState(null);
@@ -34,14 +37,27 @@ const CusTable = ({
 		setTableName(tableName);
 		setImageUrl(imageUrl);
 
+		setDeleteItems(row);
 		setOpenDelete(true);
 	};
 
 	const handleDelete = () => {
+		if (tableName == 'students') {
+			addItem(deleteItems, 'deleted');
+		}
+
+		if (tableName == 'books') {
+			addItem(deleteItems, 'deletedBooks');
+		}
+
 		deleteItem(itemId, tblName, imageUrl);
 		setOpenDelete(false);
 	};
 
+	const handleReturn = (row) => {
+		setReturnItems(row);
+		setOpenReturn(true);
+	};
 	const onReturn = (row) => {
 		const itemId = row.key;
 		const returnItem = { ...row, rdate: moment().format() };
@@ -55,6 +71,7 @@ const CusTable = ({
 		addItem(returnItem, 'history');
 		deleteItem(itemId, tableName);
 		editItem(booksKey, updatedBQty, 'books');
+		setOpenReturn(false);
 	};
 	return (
 		<div
@@ -179,9 +196,9 @@ const CusTable = ({
 												)}
 												{returnAct && (
 													<button
-														onClick={() =>
-															onReturn(row)
-														}
+														onClick={() => {
+															handleReturn(row);
+														}}
 														className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center justify-center align-center'
 													>
 														Return Book
@@ -208,6 +225,16 @@ const CusTable = ({
 				title='Confirm Deletion'
 				content='Are you sure you want to delete this item?'
 				onConfirm={handleDelete}
+			/>
+			<CusAlert
+				open={returnOpen}
+				setOpen={setOpenReturn}
+				title='Confirm Return'
+				content='Are you sure you want to return this item?'
+				onConfirm={() => {
+					onReturn(returnItems);
+				}}
+				text='Return'
 			/>
 		</div>
 	);

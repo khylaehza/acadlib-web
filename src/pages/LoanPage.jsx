@@ -6,6 +6,7 @@ import {
 	CusTable,
 	CusNotif,
 	CusQRScanner,
+	CusPrint,
 } from '../shared';
 import { AddBorrowed } from '../modals';
 import { useData } from '../DataContext';
@@ -62,6 +63,8 @@ const LoanPage = () => {
 					curSearch={curSearch}
 					sortOrder={sortOrder}
 					setSortOrder={setSortOrder}
+					rows={rows}
+					columns={columns}
 				/>
 				<hr className='border-body' />
 				<div className='flex-1 p-6'>
@@ -78,7 +81,14 @@ const LoanPage = () => {
 	);
 };
 
-const Header = ({ setCurSearch, curSearch, sortOrder, setSortOrder }) => {
+const Header = ({
+	setCurSearch,
+	curSearch,
+	sortOrder,
+	setSortOrder,
+	rows,
+	columns,
+}) => {
 	const [qrData, setQrData] = useState(null);
 	const [openBorrowed, setOpenBorrowed] = useState(false);
 
@@ -96,6 +106,11 @@ const Header = ({ setCurSearch, curSearch, sortOrder, setSortOrder }) => {
 				/>
 			</div>
 			<div className='flex gap-4 w-1/2 justify-end'>
+				<CusPrint
+					rows={rows}
+					columns={columns}
+					module={'Library Loans'}
+				/>
 				<CusQRScanner
 					setQrData={setQrData}
 					setOpenBorrowed={setOpenBorrowed}

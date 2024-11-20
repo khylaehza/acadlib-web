@@ -1,13 +1,21 @@
 import React from 'react';
 
-const CusAlert = ({ open, setOpen, title, content, onConfirm }) => {
+const CusAlert = ({
+	open,
+	setOpen,
+	title,
+	content,
+	onConfirm,
+	approve = false,
+	text = 'Deleted',
+}) => {
 	const onCancel = () => {
 		setOpen(false);
 	};
 
 	const onDelete = () => {
 		onConfirm();
-		setOpen(false); // Close the modal after confirmation
+		setOpen(false);
 	};
 
 	return (
@@ -51,10 +59,10 @@ const CusAlert = ({ open, setOpen, title, content, onConfirm }) => {
 							<div className='bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6'>
 								<button
 									type='button'
-									className='inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto'
+									className={`inline-flex w-full justify-center rounded-md ${approve ? 'bg-green-700 ' : 'bg-red-600'} px-3 py-2 text-sm font-semibold text-white shadow-sm ${approve ? 'hover:bg-green-800 ' : 'hover:bg-red-700'}  sm:ml-3 sm:w-auto`}
 									onClick={onDelete}
 								>
-									Delete
+									{text}
 								</button>
 								<button
 									type='button'

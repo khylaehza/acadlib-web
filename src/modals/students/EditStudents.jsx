@@ -27,15 +27,41 @@ const EditStudents = ({ curRow, setEditBook, showEditBook }) => {
 			pass: curRow.pass,
 		},
 		enableReinitialize: true,
+		validationSchema: Yup.object({
+			npass: Yup.string()
+				.min(8, 'Password must be at least 8 characters.')
+				.matches(
+					/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+					'Password must include uppercase, lowercase, number, and special character.'
+				),
+			conpass: Yup.string().oneOf(
+				[Yup.ref('npass'), null],
+				'Passwords must match.'
+			),
+			cnum: Yup.string().matches(
+				/^(09|\+639)\d{9}$/,
+				'Contact number must be valid and start with 09 or +639.'
+			),
+		}),
 		onSubmit: (value, actions) => {
 			const itemId = curRow.key;
 			const updatedItem = value;
 			const tableName = 'students';
+			const newImageFile = imageFile;
+			const existingImageUrl = imageFile ? curRow.image : null;
+			if (value.npass && value.conpass) {
+				updatedItem.pass = value.npass;
+			}
 
-			editItem(itemId, updatedItem, tableName);
+			editItem(
+				itemId,
+				updatedItem,
+				tableName,
+				newImageFile,
+				existingImageUrl
+			);
 
 			actions.resetForm();
-
 			setEditBook(false);
 		},
 	});
