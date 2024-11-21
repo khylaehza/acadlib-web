@@ -98,7 +98,7 @@ const Header = ({
 				<CusSearch
 					setCurSearch={setCurSearch}
 					curSearch={curSearch}
-					label={'title'}
+					label={'title, borrower'}
 				/>
 				<CusSort
 					sortOrder={sortOrder}
